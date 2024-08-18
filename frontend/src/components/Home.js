@@ -16,6 +16,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { LocationContext } from "../context/LocationContext.js";
 import Footer from "./Footer.js";
+import Loader from "./Loader.js";
 
 function Home() {
   const products = [
@@ -37,7 +38,11 @@ function Home() {
   const [displayFilters, setDisplayFilters] = useState([]);
   const [radioSelected, setRadioSelected] = useState("relevance");
   const [isSticky, setIsSticky] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
 
+  useEffect(() => {
+    setShowLoader(false);
+  }, [displayProduct]);
   useEffect(() => {
     const handleScroll = () => {
       const filterElement = document.getElementById("filter-component");
@@ -161,7 +166,10 @@ function Home() {
             )}
           </div>
         </div>
-
+        {showLoader && (<div className="mt-8 flex items-center justify-center">
+          <Loader></Loader>
+        </div>) }
+        
         <div className="p-4 grid grid-cols-5 gap-2 mt-2">
           {displayProduct.map((item) => (
             <Link key={item._id} to={`/restaurant/${item._id}`}>
@@ -176,8 +184,7 @@ function Home() {
           ))}
         </div>
       </div>
-     <Footer></Footer>
-      
+      <Footer></Footer>
     </div>
   );
   //   return (

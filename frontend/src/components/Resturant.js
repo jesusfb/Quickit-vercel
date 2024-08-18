@@ -9,6 +9,7 @@ import deliveryIcon from "../assets/delivery.jpg";
 import spoon from "../assets/spoon-loader.webm"
 import {CartContext} from '../context/CartContext'
 import { LocationContext } from "../context/LocationContext";
+import Loader from "./Loader.js";
 function Resturant() {
   const { id } = useParams();
   const [resturant, setResturant] = useState({
@@ -48,7 +49,11 @@ function Resturant() {
   const [deliveryDistance,setDeliveryDistance] = useState("");
   const [deliveryCharge,setDeliveryCharge] = useState("");
   const { locationData, setLocationData } = useContext(LocationContext);
- 
+  const [showLoader, setShowLoader] = useState(true);
+
+  useEffect(() => {
+    setShowLoader(false);
+  }, [filteredDish]);
   useEffect(()=>{
     window.scrollTo(0, 0);
     getResturantDetails();
@@ -268,6 +273,10 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
         <hr class="border-t-[1px] border-gray-300 mt-8"></hr>
         {/* <img className="vegIcons" src={veg} alt="KFC" /> */}
       </div>
+
+      {showLoader && (<div className="mt-8 flex items-center justify-center">
+          <Loader></Loader>
+        </div>) }
       {filteredDish.map((dish) => (
         <Dish dish={dish} ></Dish>
       ))}
