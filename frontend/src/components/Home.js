@@ -40,9 +40,9 @@ function Home() {
   const [isSticky, setIsSticky] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
 
-  useEffect(() => {
-    setShowLoader(false);
-  }, [displayProduct]);
+  // useEffect(() => {
+  //   setShowLoader(false);
+  // }, [displayProduct]);
   useEffect(() => {
     const handleScroll = () => {
       const filterElement = document.getElementById("filter-component");
@@ -113,6 +113,7 @@ function Home() {
   };
 
   const getProduct = async (location) => {
+    setShowLoader(true);
     await axios
       .get(process.env.REACT_APP_GET_RESTURANT + "/" + location)
       .then((res) => {
@@ -121,6 +122,7 @@ function Home() {
       .catch((e) => {
         console.log("err", e);
       });
+      setShowLoader(false);
   };
   return (
     <div className="h-screen">
