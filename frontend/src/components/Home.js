@@ -118,11 +118,13 @@ function Home() {
       .get(process.env.REACT_APP_GET_RESTURANT + "/" + location)
       .then((res) => {
         setAllProduct(res.data);
+        setShowLoader(false);
       })
       .catch((e) => {
         console.log("err", e);
+        setShowLoader(false);
       });
-      setShowLoader(false);
+      
   };
   return (
     <div className="h-screen">
