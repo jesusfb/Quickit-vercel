@@ -66,6 +66,8 @@ function Cart({ currentUser, setCurrentUser }) {
     _id: "",
   });
 
+
+
   const { locationData, setLocationData } = useContext(LocationContext);
   const newFormRef = useRef(null);
   useEffect(() => {
@@ -443,7 +445,8 @@ const handleCheckout = () => {
       )}
       {/* new address modal */}
       <div className="flex overflow-y-auto bg-gray-200 h-full w-full px-[10%] py-[2%] space-x-8 pb-[5%]">
-        <div className="w-[55%] flex justify-end">
+
+        {cart.length? (<><div className="w-[55%] flex justify-end">
           <div className="w-full max-w-[700px] h-[600px]">
             {/* account */}
             <div className="bg-white w-full  p-4">
@@ -540,7 +543,7 @@ const handleCheckout = () => {
                             <button
                               onClick={(e) => {
                                 handleChnageDeliver(address);
-                              }}
+                              } }
                               class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold text-[12px] py-2 px-2 border border-green-700 rounded"
                             >
                               DELIVER HERE
@@ -572,7 +575,7 @@ const handleCheckout = () => {
                           <button
                             onClick={(e) => {
                               setShowNewFormMenu(true);
-                            }}
+                            } }
                             class="mt-4 bg-green-500 hover:bg-green-700 text-white font-bold text-[12px] py-2 px-2 border border-green-700 rounded"
                           >
                             ADD NEW
@@ -600,7 +603,7 @@ const handleCheckout = () => {
                         <div
                           onClick={(e) => {
                             setSelectedDeliveryAddress(null);
-                          }}
+                          } }
                           className="pl-[320px] font-bold text-[15px] text-yellow-500 cursor-pointer"
                         >
                           CHANGE
@@ -640,8 +643,8 @@ const handleCheckout = () => {
                       name="payment"
                       value="cod"
                       className="cursor-pointer"
-                      checked ={selectedPaymentMethod === 'cod'}
-                      onChange={(e)=>{setSelectedPaymentMethod(e.target.value)}}
+                      checked={selectedPaymentMethod === 'cod'}
+                      onChange={(e) => { setSelectedPaymentMethod(e.target.value); } }
                     ></input>
                     <label for="html">Cash on delivery</label>
                   </div>
@@ -652,15 +655,15 @@ const handleCheckout = () => {
                       name="payment"
                       value="payu"
                       className="cursor-pointer"
-                      checked ={selectedPaymentMethod === 'payu'}
-                      onChange={(e)=>{setSelectedPaymentMethod(e.target.value)}}
+                      checked={selectedPaymentMethod === 'payu'}
+                      onChange={(e) => { setSelectedPaymentMethod(e.target.value); } }
                     ></input>
                     <label for="html">payU</label>
                   </div>
 
                   <button
-                  onClick={(e)=>{handleCheckout()}}
-                   disabled = {!selectedPaymentMethod}
+                    onClick={(e) => { handleCheckout(); } }
+                    disabled={!selectedPaymentMethod}
                     class="ml-[80%] mt-8 bg-green-500 hover:bg-green-700 text-white font-bold text-[15px] py-2 px-4 border border-green-700 rounded"
                   >
                     CHEKOUT
@@ -675,88 +678,93 @@ const handleCheckout = () => {
 
             {/* payment */}
           </div>
-        </div>
-        <div className="w-[45%] flex justify-start">
-          <div className="w-full max-w-[500px] h-[600px] bg-white p-4">
-            {/* resturant section */}
-            <div className="flex">
-              <img
-                className="resturantImage"
-                src={restaurant.image}
-                alt="delivery"
-              />
-              <div className="ml-[30px]">
-                <div className="font-bold text-gray-700">{restaurant.name}</div>
-                <div className="">{restaurant.address}</div>
-              </div>
-            </div>
-
-            <hr className="mt-[10px]"></hr>
-            {/* cart product section */}
-            <div className="p-8 h-80 overflow-y-auto bg-gray-100 border border-gray-300 rounded">
-              {cart.map((item) => (
-                <CartProduct
-                  cartItem={item}
-                  handleDecrement={handleDecrement}
-                  handleIncrement={handleIncrement}
-                ></CartProduct>
-              ))}
-
-              {/* no contact delivery */}
-              <div className="border border-2 p-4 mt-4">
-                <div class="flex items-center me-4">
-                  <input
-                    id="green-checkbox"
-                    type="checkbox"
-                    checked={contactLessDelivery}
-                    onChange={(e) => {
-                      let prev = contactLessDelivery;
-                      setContactLessDelivery(!prev);
-                    }}
-                    class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label
-                    for="green-checkbox"
-                    class="ms-2 text-sm font-medium text-gray-900 font-bold dark:text-gray-600"
-                  >
-                    Opt in for No-contact Delivery
-                  </label>
-                </div>
-                <div className="text-sm mt-[10px]  text-gray-700">
-                  {contactLessDelivery ? (
-                    <div>
-                      Our delivery partner will call to confirm. Please ensure
-                      that your address has all the required details.
-                    </div>
-                  ) : (
-                    <div>
-                      Unwell, or avoiding contact? Please select no-contact
-                      delivery. Partner will safely place the order outside your
-                      door (not for COD)
-                    </div>
-                  )}
+        </div><div className="w-[45%] flex justify-start">
+            <div className="w-full max-w-[500px] h-[600px] bg-white p-4">
+              {/* resturant section */}
+              <div className="flex">
+                <img
+                  className="resturantImage"
+                  src={restaurant.image}
+                  alt="delivery" />
+                <div className="ml-[30px]">
+                  <div className="font-bold text-gray-700">{restaurant.name}</div>
+                  <div className="">{restaurant.address}</div>
                 </div>
               </div>
-            </div>
 
-            {/* total section */}
+              <hr className="mt-[10px]"></hr>
+              {/* cart product section */}
+              <div className="p-8 h-80 overflow-y-auto bg-gray-100 border border-gray-300 rounded">
+                {cart.map((item) => (
+                  <CartProduct
+                    cartItem={item}
+                    handleDecrement={handleDecrement}
+                    handleIncrement={handleIncrement}
+                  ></CartProduct>
+                ))}
 
-            <div className="p-4">
-              <div className="flex w-full">
-                <div className="w-[90%] text-[13px]">Platform Fees</div>
-                <div className="w-[10%] text-[13px]">₹6</div>
+                {/* no contact delivery */}
+                <div className="border border-2 p-4 mt-4">
+                  <div class="flex items-center me-4">
+                    <input
+                      id="green-checkbox"
+                      type="checkbox"
+                      checked={contactLessDelivery}
+                      onChange={(e) => {
+                        let prev = contactLessDelivery;
+                        setContactLessDelivery(!prev);
+                      } }
+                      class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
+                    <label
+                      for="green-checkbox"
+                      class="ms-2 text-sm font-medium text-gray-900 font-bold dark:text-gray-600"
+                    >
+                      Opt in for No-contact Delivery
+                    </label>
+                  </div>
+                  <div className="text-sm mt-[10px]  text-gray-700">
+                    {contactLessDelivery ? (
+                      <div>
+                        Our delivery partner will call to confirm. Please ensure
+                        that your address has all the required details.
+                      </div>
+                    ) : (
+                      <div>
+                        Unwell, or avoiding contact? Please select no-contact
+                        delivery. Partner will safely place the order outside your
+                        door (not for COD)
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div className="flex w-full mt-2">
-                <div className="w-[90%] text-[13px]">Delivery Charges</div>
-                <div className="w-[10%] text-[13px]">₹{delivery}</div>
-              </div>
-              <div className="flex w-full mt-2">
-                <div className="w-[90%] font-bold text-gray-700">To Pay</div>
-                <div className="w-[10%] font-bold text-gray-700 pr-4">₹{total.toFixed(2)}</div>
+
+              {/* total section */}
+
+              <div className="p-4">
+                <div className="flex w-full">
+                  <div className="w-[90%] text-[13px]">Platform Fees</div>
+                  <div className="w-[10%] text-[13px]">₹6</div>
+                </div>
+                <div className="flex w-full mt-2">
+                  <div className="w-[90%] text-[13px]">Delivery Charges</div>
+                  <div className="w-[10%] text-[13px]">₹{delivery}</div>
+                </div>
+                <div className="flex w-full mt-2">
+                  <div className="w-[90%] font-bold text-gray-700">To Pay</div>
+                  <div className="w-[10%] font-bold text-gray-700 pr-4">₹{total.toFixed(2)}</div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </div></>):(<div className="flex flex-col items-center justify-center h-[80dvh] w-screen ">
+          
+          <img className="w-80" src={require("../assets/cart-empty.png")}></img>
+
+          <div className="text-gray-500 font-semibold text-[30px]">
+          Your cart is empty!
+            </div>
+        </div>)}
+        
       </div>
     </>
   );

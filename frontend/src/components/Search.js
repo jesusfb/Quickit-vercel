@@ -2,6 +2,7 @@ import React, { useState,useEffect,useContext } from "react";
 import { LocationContext } from "../context/LocationContext.js";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
+import Loader from "./Loader.js";
 function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([
@@ -9,6 +10,7 @@ function Search() {
   ]);
   const { food } = useParams();
   const { locationData } = useContext(LocationContext);
+  const [showLoader,setShowLoader] = useState(false);
   useEffect(() => {
     // Scroll to top on mount
     window.scrollTo(0, 0);
@@ -29,14 +31,17 @@ function Search() {
   let searchKey = searchInput || key;
   let latlng = locationData.lat + "," + locationData.lon;
    console.log(process.env.REACT_APP_SEARCH_RESTURANT + "/" + latlng + "/" + searchKey);
+   setShowLoader(true);
   await axios
       .get(process.env.REACT_APP_SEARCH_RESTURANT + "/" + latlng + "/" + searchKey) 
       .then((res) => {
         setSearchResults(res.data)
+        setShowLoader(false);
       })
       .catch((e) => {
         setSearchResults([])
         console.log("err", e);
+        setShowLoader(false);
       });
         
   }
@@ -86,6 +91,8 @@ function Search() {
       </form>
 
       <div className="p-4 mt-8 h-[40rem] overflow-y-auto space-y-4 space-x-2">
+        {showLoader && <Loader></Loader> }
+          
         {searchResults.map((item) => (
            <Link key={item._id} to={`/restaurant/${item._id}`}>
           <div className="flex cursor-pointer">

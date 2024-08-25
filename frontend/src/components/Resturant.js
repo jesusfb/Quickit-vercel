@@ -51,9 +51,9 @@ function Resturant() {
   const { locationData, setLocationData } = useContext(LocationContext);
   const [showLoader, setShowLoader] = useState(true);
 
-  useEffect(() => {
-    setShowLoader(false);
-  }, [filteredDish]);
+  // useEffect(() => {
+  //   setShowLoader(false);
+  // }, [filteredDish]);
   useEffect(()=>{
     window.scrollTo(0, 0);
     getResturantDetails();
@@ -108,15 +108,19 @@ await axios.get(process.env.REACT_APP_GET_RESTURANT_BY_ID + "/" + id).then((res)
 
 };
   const getDishes = async () => {
+
+    setShowLoader(true);
     await axios
       .get(process.env.REACT_APP_GET_PRODUCT + "/" + resturant._id)
       .then((res) => {
         console.log("res", res);
         setAllDish(res.data);
         setFilteredDish(res.data);
+        setShowLoader(false);
       })
       .catch((e) => {
         console.log("err", e);
+        setShowLoader(false);
       });
   };
   const filterDish = () => {

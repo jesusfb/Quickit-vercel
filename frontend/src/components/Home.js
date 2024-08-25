@@ -39,10 +39,13 @@ function Home() {
   const [radioSelected, setRadioSelected] = useState("relevance");
   const [isSticky, setIsSticky] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
+  const [noService, setNoService] = useState(false);
 
   // useEffect(() => {
-  //   setShowLoader(false);
-  // }, [displayProduct]);
+  //   console.log("allProduct",allProduct);
+  //   if(!allProduct.length) setNoService(true);
+  //   else setNoService(false);
+  // }, [allProduct]);
   useEffect(() => {
     const handleScroll = () => {
       const filterElement = document.getElementById("filter-component");
@@ -119,75 +122,88 @@ function Home() {
       .then((res) => {
         setAllProduct(res.data);
         setShowLoader(false);
+        if(!res.data.length) setNoService(true);
+        else setNoService(false);
       })
       .catch((e) => {
         console.log("err", e);
         setShowLoader(false);
       });
-      
   };
   return (
     <div className="h-screen">
-      <div className="">
-        <h1 className="font-bold text-[25px] pl-[50px]">
-          What's on your mind?
-        </h1>
-        <Carousel products={products} />
-        <hr className="mt-[50px]" />
-        <h1 className="font-bold text-[25px] pl-[50px] mt-[30px]">
-          Restaurants with online food delivery in Bangalore
-        </h1>
-        <div
-          id="filter-component"
-          className={`flex pl-16 pb-4 transition-all duration-100 ${
-            isSticky ? "sticky top-0 bg-white z-50 shadow" : ""
-          }`}
-          style={{ zIndex: isSticky ? 50 : "auto" }} // Ensure proper stacking context
-        >
-          <div className=" grid grid-cols-7 gap-2 mt-2">
-            <div className="col-span-6">
-              <Filter
-                displayFilters={displayFilters}
-                setDisplayFilters={setDisplayFilters}
-                radioSelected={radioSelected}
-                setRadioSelected={setRadioSelected}
-              />
+      {noService? (
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-gray-500 font-bold mt-[8%]">
+            Opps! Sorry we are currently not available at your location
             </div>
-            {isSticky && (
-              <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-search"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-                &nbsp;&nbsp;&nbsp;<Link to={`/search/food`}>Search</Link>
+          <img className=" w-80" src={require("../assets/nodata.jpg")}></img>
+        </div>
+      ) : (
+        <div className="">
+          <h1 className="font-bold text-[25px] pl-[50px]">
+            What's on your mind?
+          </h1>
+          <Carousel products={products} />
+          <hr className="mt-[50px]" />
+          <h1 className="font-bold text-[25px] pl-[50px] mt-[30px]">
+            Restaurants with online food delivery in Bangalore
+          </h1>
+          <div
+            id="filter-component"
+            className={`flex pl-16 pb-4 transition-all duration-100 ${
+              isSticky ? "sticky top-0 bg-white z-50 shadow" : ""
+            }`}
+            style={{ zIndex: isSticky ? 50 : "auto" }} // Ensure proper stacking context
+          >
+            <div className=" grid grid-cols-7 gap-2 mt-2">
+              <div className="col-span-6">
+                <Filter
+                  displayFilters={displayFilters}
+                  setDisplayFilters={setDisplayFilters}
+                  radioSelected={radioSelected}
+                  setRadioSelected={setRadioSelected}
+                />
               </div>
-            )}
+              {isSticky && (
+                <div className="ml-[100px] flex items-center font-semibold text-gray-500 hover:text-customHoverColor cursor-pointer">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="bi bi-search"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                  </svg>
+                  &nbsp;&nbsp;&nbsp;<Link to={`/search/food`}>Search</Link>
+                </div>
+              )}
+            </div>
+          </div>
+          {showLoader && (
+            <div className="mt-8 flex items-center justify-center">
+              <Loader></Loader>
+            </div>
+          )}
+
+          <div className="p-4 grid grid-cols-5 gap-2 mt-2">
+            {displayProduct.map((item) => (
+              <Link key={item._id} to={`/restaurant/${item._id}`}>
+                <Product product={item} />
+              </Link>
+            ))}
+
+            {displayProduct.map((item) => (
+              <Link key={item._id} to={`/restaurant/${item._id}`}>
+                <Product product={item} />
+              </Link>
+            ))}
           </div>
         </div>
-        {showLoader && (<div className="mt-8 flex items-center justify-center">
-          <Loader></Loader>
-        </div>) }
-        
-        <div className="p-4 grid grid-cols-5 gap-2 mt-2">
-          {displayProduct.map((item) => (
-            <Link key={item._id} to={`/restaurant/${item._id}`}>
-              <Product product={item} />
-            </Link>
-          ))}
+      )}
 
-          {displayProduct.map((item) => (
-            <Link key={item._id} to={`/restaurant/${item._id}`}>
-              <Product product={item} />
-            </Link>
-          ))}
-        </div>
-      </div>
       <Footer></Footer>
     </div>
   );
